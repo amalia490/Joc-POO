@@ -1,38 +1,37 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include "Map.h"
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Export.hpp>
+#include <SFML/Audio.hpp>
+#include<iostream>
 #include "Game.h"
 
 class Meniu {
 private:
-	sf::RenderWindow* window{};
+	int ok = 0;
+	sf::RenderWindow*  window;
 	sf::VideoMode videoMode;
-	//Map maze;
-	//sf::Event ev();
+	sf::Font font;
+	sf::Text title;
+	sf::Text Start;
+	sf::Text Setari;
+	sf::Text Audio;
 	sf::View view;
-	bool isPaused;
-	bool isRunning;
-	bool isRestarting;
-	bool isResume;
-	bool Begin;
-	Game game;
-	char ok[10];
-	vector<vector<int>> labirint;
-	char optiune[20], raspuns[20];
+	std::vector<Game*> games;
+	//Game* game;
 public:
 	Meniu();
-	void setRun(bool Run);
-	void init();
-	void initWindow();
-	void rend();
-	void draw();
-	void events();
-	void update();
-	bool running();
-	void handleInput();
-	bool getRun();
 	static Meniu& getInstance();
-	
+	void addGame(Game* game);
+	void pozitieMinion();
+	void render();
+	void draw();
+	int getok();
+	void initializareWindow();
+	void initializare();
+	void initText();
+	void update();
+	void pollEvents(sf::RenderWindow &window);
+	bool running();
 };

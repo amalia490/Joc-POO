@@ -1,32 +1,60 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Export.hpp>
+#include <SFML/Audio.hpp>
 #include "Map.h"
-#include "Player.h"
+#include "Minion.h"
 
-class Game {
+class Game{
 private:
-	sf::RenderWindow window;
-	Player player;
-	Map map;
-	int starting = 0, playerX = 0, playerY = 0, lastX, lastY, nrBanane;
-	vector<vector<int>> labir = vector<vector<int>>(20, vector<int>(20, 1));
-	bool run = true;
+	//Coordonate coordonate;
+	int starting = 0, playerX, playerY, lastX, lastY, punctaj = 0, ok;
+	static int step, nrMiscariSpeed;
+	size_t i;
+	std::vector<std::vector<int>>labir = std::vector<std::vector<int>>(20, std::vector<int>(20, 1));
+	bool run = true, castigat = false;
 	char c;
+	sf::VideoMode videoMode;
+	sf::View view;
+	sf::Font font;
+	sf::Text text, finished, Coco, Kiwi;
+	sf::Texture texture3, texture2, texture, texture4;
+	sf::CircleShape cocos, kiwi;
+	sf::RectangleShape pauza;
+	//vector<Banana> bananas2;
+	sf::RectangleShape resume;
+	sf::RenderWindow* gameWindow;
+	std::vector<Minion*> minioni;
+	std::vector<Map*> maps;
 public:
 	Game();
+	void setStep(int step);
+	void timpSpeed();
+	int getStep();
+	void initializare();
+	void initializareWindow();
+	void addMinioni();
+	void addMap();
+	void draw();
+	void lost(int& ok);
+	void nrCocos();
+	void nrKiwi();
 	int getStart();
-	int running();
+	bool running(int& ok);
 	void start();
 	void update();
+	void pollEvents(sf::RenderWindow& gameWindow);
 	void render();
-	void saveState();
-	void loadState();
+	void pause();
+	void windowPause();
 	void restart();
-	void restart2();
+	void windowResume();
 	void exit();
 	void Miscare();
-	void MiscareResume();
+	void Resume();
+	void Finish(int& ok);
 	int getC();
+	~Game();
 };

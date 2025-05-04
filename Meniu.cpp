@@ -1,154 +1,146 @@
-#include "Meniu.h"
-#include "Map.h"
-#include "Game.h"
-#include <iostream>
+#pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-Meniu::Meniu() {
-    isPaused = false;
-    isRunning = false;
-    isRestarting = false;
-    isResume = false;
-    Begin = false;
-}
-
-bool Meniu::getRun() {
-    return isRunning;
-}
+#include <string>
+#include "Meniu.h"
+#include "Minion.h"
 
 
-/*void Meniu::init() {
-
-    this->window = nullptr; 
-}
-
-void Meniu::initWindow() {
-    sf::VideoMode videoMode({ 500, 900 }, 32);
-    this->window = new sf::RenderWindow(this->videoMode, "Minionii");
-    this->window->setFramerateLimit(200);
-
-    view.setSize({static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)});
-    view.setCenter(view.getSize() / 2.f);
-    // Set the view to be displayed in the window
-    window->setView(view);
-    window->display();
-}
-*/
-void Meniu::update() {
-    
-
-
-    std::cout << "                                                  ---MINI MAZE---" << std::endl;
-    std::cout << "                                                       ~MENU~" << std::endl;
-    std::cout << "                                                       START" << std::endl;
-    std::cout << "                                                       PAUSE" << std::endl;
-    std::cout << "                                                       RESUME" << std::endl;
-    std::cout << "                                                       RESTART" << std::endl;
-    std::cout << "                                                       ESCAPE" << std::endl;
-    std::cout << "                                      If you want to exit menu just enter escape!" << std::endl;
-    std::cout << "Select one of them by writing here your option:";
-    std::cin >> optiune;
-    handleInput();
-   
-
-}
-
-
-/*void Meniu::rend() {
-    if (this->window != nullptr)
-    {
-        this->window->clear(sf::Color::Black);
-        //game.render();
-        this->window->display();
-    }
-} */
-/*void Meniu::events() {
-    
-    if (this->window != nullptr) {
-        while (this->window->pollEvent()) {
-            const std::optional event = window->pollEvent();
-            if (event->is<sf::Event::Closed>()) {
-                this->window->close();
-                break;
-            }
-        }
-    }
-}*/
-
-/*bool Meniu::running() {
-    if (this->window != nullptr)
-        return this->window->isOpen();
-    return false;
-}*/
-
-bool Meniu::running() {
-    if (isRunning == false)
-        return true;
-    else
-        return false;
-}
-
-Meniu &Meniu::getInstance() {
+Meniu& Meniu::getInstance() {
 
     static Meniu instance;
     return instance;
+}
+
+void Meniu::addGame(Game* game) {
+    games.emplace_back(game);
+}
+
+int Meniu::getok() {
+    return ok;
+}
+
+void Meniu::initializare() {
+    this->window = nullptr;
+}
+
+void Meniu::initText() {
+    font.openFromFile("D:\\project\\joc2\\arial.ttf");
+    title.setString("Choose your game!");
+    title.setFont(font);
+    title.setCharacterSize(40);
+    title.setPosition({ 300, 20 });
+    title.setFillColor(sf::Color::White);
+    Start.setString("Start");
+    Start.setFont(font);
+    Start.setCharacterSize(40);
+    Start.setPosition({ 150, 100 });
+    Start.setFillColor(sf::Color::White);
+    Setari.setString("Setari");
+    Setari.setFont(font);
+    Setari.setCharacterSize(40);
+    Setari.setPosition({ 400, 100 });
+    Setari.setFillColor(sf::Color::White);
+    Audio.setString("Audio");
+    Audio.setFont(font);
+    Audio.setCharacterSize(40);
+    Audio.setPosition({ 660, 100 });
+    Audio.setFillColor(sf::Color::White);
 
 }
 
-void Meniu::handleInput() {
-    if (strcmp(optiune, "Pause") == 0) {
-        if (!isPaused) {
-            isPaused = true;
-            isResume = false;
-            game.saveState();
-        }
-    }
-    if (strcmp(optiune, "Resume") == 0) {
-        if (!isResume) {
-            isResume = true;
-            isPaused = false;
-            isRunning = false;
-            game.loadState();
-        }
-    }
-    if (strcmp(optiune, "Start") == 0) {
-        if (isRunning == false && Begin == false) {
-            Begin = true;
-            //isRunning = true;
-            game.start();
-            //game.render();
-        }
-    }
-    if (strcmp(optiune, "Restart") == 0) {
-        if (isRunning == false && isRestarting == false) {
-            std::cout << "Are you sure you want to restart the game? Your progress won't be saved." << std::endl;
-            std::cin >> ok;
-            if (strcmp(ok, "yes") == 0)
+void Meniu::initializareWindow() {
+
+    this->videoMode.size.x = 900;
+    this->videoMode.size.y = 700;
+    this->window = new sf::RenderWindow(this->videoMode,
+        "My Minion", sf::Style::Titlebar | sf::Style::Close);
+    this->window->setFramerateLimit(144);
+    // Create a view with the same size as the window
+    view.setSize({ static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y) });
+    view.setCenter(view.getSize() / 2.f);
+    // Set the view to be displayed in the window
+    window->setView(view);
+    
+}
+
+Meniu::Meniu(): title(font), Start(font), Setari(font), Audio(font){
+
+    this->initializare();
+    this->initializareWindow();
+    this->initText();
+    this->render();
+    this->draw();
+};
+
+
+void Meniu::update() {
+    this->pollEvents(*this->window);
+}
+
+
+void Meniu::pollEvents(sf::RenderWindow &window) {
+    if (this->window != nullptr) {
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>())
             {
-                game.restart();
-                //game.render();
+                window.close();
             }
             else {
-                game.restart2();
+                if (event->is<sf::Event::KeyPressed>()) {
+                    if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape) {
+                        window.close();
+                    }
+                }
+                else {
+                    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                        sf::Vector2i position = sf::Mouse::getPosition(*this->window);
+                        if (position.x >= 150 && position.y >= 100 && position.x <= 200 && position.y <= 150){
+                            window.close();
+                            delete &window;
+                            auto* game1 = new Game;
+                            addGame(game1);
+                           // auto* game1 = games[0];
+                            for (auto* g : games)
+                            {
+                                g->start();
+                                while (g->running(ok))
+                                {
+                                    g->update();
+                                }
+                            }
+                        }
+                    }           
+                }
             }
-        }
-    }
-    if (strcmp(optiune, "Escape") == 0) {
-        isRunning = true;
-        std::cout << "Are you sure you want to exit?" << std::endl;
-        std::cin >> raspuns;
-        if (strcmp(raspuns, "yes") == 0)
-            game.exit();
-        else
-        {
-            isRunning = false;
         }
     }
 }
 
+bool Meniu::running() {
+    if (this->window != nullptr)
+        return this->window->isOpen();
+    return false;
+}
 
 
+void Meniu::render() {
+    if (this->window != nullptr)
+    {
+        this->window->clear(sf::Color::Black);
+        //Draw Meniu
+        this->draw();
+        this->window->display();
+    }
+}
+
+void Meniu::draw() {
+    if (this->window != nullptr)
+    {
+        this->window->draw(title);
+        this->window->draw(Start);
+        this->window->draw(Setari);
+        this->window->draw(Audio);
+
+    }
+}
