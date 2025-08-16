@@ -7,14 +7,14 @@ A simple console-based C++ using SFML game where a Minion navigates a maze, eats
 
 # OOP Elements:
 ## Classes:
-- Minion: Handles movement and score.
-- Maze: Stores and displays maze layout.
-- Fruit: Represents collectible items.
-- Game: Controls the game loop and logic.
+- **Minion**: Handles movement and score.
+- **Maze**: Stores and displays maze layout.
+- **Fruit**: Represents collectible items.
+- **Game**: Controls the game loop and logic.
 
 ---
 
 # Concepts Used:
-- Encapsulation: Each class manages its own data.
-- Inheritance/Polymorphism (optional): Extendable for more entity types.
-- Abstraction: Simplified interfaces for movement, collision, and display.
+- **Encapsulation**: Each class manages its own data.
+- **Inheritance/Polymorphism**: Extendable for more entity types.
+- **Abstraction**: Simplified interfaces for movement, collision, and display.
